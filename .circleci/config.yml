@@ -50,8 +50,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: npm i
-      - run: npm update
+      - run: npm install --save-dev webpack
       - restore_cache:
           keys: [frontend-build]
       - run:

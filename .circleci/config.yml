@@ -128,7 +128,7 @@ jobs:
           name: Audit front-end
           command: |
             cd frontend
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical || cat /home/circleci/.npm/_logs/*-debug.log
 
   scan-backend:
     docker:
@@ -145,7 +145,7 @@ jobs:
           name: Audit back-end
           command: |
             cd backend
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical || cat /home/circleci/.npm/_logs/*-debug.log
 
 #   deploy-infrastructure:
 #     docker:

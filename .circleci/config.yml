@@ -51,6 +51,7 @@ jobs:
     steps:
       - checkout
       - run: npm i
+      - run: npm update
       - restore_cache:
           keys: [frontend-build]
       - run:

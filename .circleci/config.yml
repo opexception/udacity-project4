@@ -27,8 +27,8 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID})
-            #SUCCESS = 1
+            #SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration)
+            SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
@@ -257,8 +257,8 @@ jobs:
             npm run migrations > /tmp/migrations.results
             cat /tmp/migrations.results
             if (grep "has been executed successfully" /tmp/migrations.results)
-            then MIG_SUCCESS=1
-            else MIG_SUCCESS=0
+            then export MIG_SUCCESS=1
+            else export MIG_SUCCESS=0
             fi
             #exit 1
             # Rollback revert migrations - https://knowledge.udacity.com/questions/502810
@@ -267,10 +267,10 @@ jobs:
           command: |
             # Your code here
             curl -H "Content-Type: text/plain" \
-              -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" \
+              -H "token: ${CIRCLE_WORKFLOW_ID}" \
               --request PUT \
               --data "${MIG_SUCCESS}" \
-              https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              https://api.memstash.io/values/migration
             #exit 1
       - revert-migrations
       # Here's where you will add some code to rollback on failure

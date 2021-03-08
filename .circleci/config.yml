@@ -301,7 +301,6 @@ jobs:
           command: |
             # your code here
             # refer here for node install: https://stackoverflow.com/questions/27350634/how-to-yum-install-node-js-on-amazon-linux/35165401#35165401
-            whoami
             curl --silent --location https://rpm.nodesource.com/setup_14.x | bash -
             yum -y install nodejs
       - run:
@@ -311,10 +310,10 @@ jobs:
             BACKEND_IP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/deployment)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            echo "npm installing..."
-            npm install
             cd frontend
             pwd
+            echo "npm installing..."
+            npm install
             echo "Building..."
             npm rum build
       - run:

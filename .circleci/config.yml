@@ -251,8 +251,11 @@ jobs:
           command: |
             # Your code here
             cd backend
+            pwd
             npm install
+            echo "npm installed"
             npm run migrations > /tmp/migrations.results
+            cat /tmp/migrations.results
             if (grep "has been executed successfully" /tmp/migrations.results)
             then MIG_SUCCESS=1
             else MIG_SUCCESS=0

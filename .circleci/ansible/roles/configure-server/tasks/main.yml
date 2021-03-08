@@ -9,11 +9,11 @@
   apt:
     upgrade: yes
 
-- name: "install build tools"
-  become: yes
-  apt:
-    name: ["build-essential"]
-    state: latest
+# - name: "install build tools"
+#   become: yes
+#   apt:
+#     name: ["build-essential"]
+#     state: latest
 
 - name: remove dependencies that are no longer required
   become: yes

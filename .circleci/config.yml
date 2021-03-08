@@ -228,10 +228,10 @@ jobs:
           command: |
             # Your code here
             apk add --update ansible
-            apk add curl
-            apk add sudo
+            # apk add curl
+            # apk add sudo
             #exit 1
-      - aws-cli/install
+      # - aws-cli/install
       - run:
           name: Configure server
           command: |

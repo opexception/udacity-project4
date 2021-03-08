@@ -28,8 +28,8 @@ commands:
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             #SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration)
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
+            SUCCESS=1
+            if (( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
             #  npm install
@@ -251,27 +251,25 @@ jobs:
           command: |
             # Your code here
             cd backend
-            pwd
             npm install
-            echo "npm installed"
+            echo "Running migrations..."
             npm run migrations > /tmp/migrations.results
             cat /tmp/migrations.results
             if (grep "has been executed successfully" /tmp/migrations.results)
-            then export MIG_SUCCESS=1
-            else export MIG_SUCCESS=0
-            fi
-            #exit 1
-            # Rollback revert migrations - https://knowledge.udacity.com/questions/502810
-      - run:
-          name: Send migration results to memstash
-          command: |
-            # Your code here
+            then
             curl -H "Content-Type: text/plain" \
               -H "token: ${CIRCLE_WORKFLOW_ID}" \
               --request PUT \
-              --data "${MIG_SUCCESS}" \
+              --data "1" \
               https://api.memstash.io/values/migration
+            fi
             #exit 1
+            # Rollback revert migrations - https://knowledge.udacity.com/questions/502810
+      # - run:
+      #     name: Send migration results to memstash
+      #     command: |
+      #       # Your code here
+      #       #exit 1
       - revert-migrations
       # Here's where you will add some code to rollback on failure
       - destroy-environment

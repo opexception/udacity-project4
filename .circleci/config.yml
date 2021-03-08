@@ -47,7 +47,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [v7-frontend-build]
+          keys: [v8-frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -56,7 +56,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: v7-frontend-build
+          key: v8-frontend-build
 
   build-backend:
     docker:
@@ -64,7 +64,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [v7-backend-build]
+          keys: [v8-backend-build]
       - run:
           name: Back-end build
           command: |
@@ -73,7 +73,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: v7-backend-build
+          key: v8-backend-build
 
   test-frontend:
     docker:
@@ -84,7 +84,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v7-frontend-build]
+          keys: [v8-frontend-build]
       # Your job code here
       - run:
           name: Test front-end
@@ -101,7 +101,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v7-backend-build]
+          keys: [v8-backend-build]
       # Your job code here
       - run:
           name: Test back-end
@@ -118,7 +118,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v7-frontend-build]
+          keys: [v8-frontend-build]
       # Your job code here
       - run:
           name: Audit front-end
@@ -136,7 +136,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v7-backend-build]
+          keys: [v8-backend-build]
       # Your job code here
       - run:
           name: Audit back-end
@@ -201,35 +201,35 @@ jobs:
       # Here's where you will add some code to rollback on failure    
       #- destroy-environment
 
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     # Checkout code from git
-  #     - checkout
-  #     # Add ssh keys with fingerprint
-  #     - add_ssh_keys:
-  #         fingerprints:
-  #           - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
-  #     # attach workspace
-  #     - attach_workstpace:
-  #         at: ~/
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           apk add --update ansible
-  #           #exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           export ANSIBLE_HOST_KEY_CHECKING=False
-  #           ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
-  #           #exit 1
-  #     # Here's where you will add some code to rollback on failure  
-  #     - destroy-environment  
+  configure-infrastructure:
+    docker:
+      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints:
+            - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
+      # attach workspace
+      - attach_workstpace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apk add --update ansible
+            #exit 1
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+            #exit 1
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment  
 
 #   run-migrations:
 #     docker:

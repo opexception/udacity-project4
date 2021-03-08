@@ -228,6 +228,8 @@ jobs:
           command: |
             # Your code here
             apk add --update ansible
+            pip3 install --upgrade pip \
+              && pip3 install awscli
             # apk add curl
             # apk add sudo
             #exit 1

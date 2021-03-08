@@ -172,7 +172,7 @@ jobs:
               curl -H "Content-Type: text/plain" \
               -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" \
               --request PUT \
-              --data "${IPADDR}}" \
+              --data "${IPADDR}" \
               https://api.memstash.io/values/deployment
 
       - run:
@@ -240,25 +240,33 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment  
 
-#   run-migrations:
-#     docker:
-#       # Docker image here that supports NodeJS
-#       - image: circleci/node:13.8.0
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Run migrations
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Send migration results to memstash
-#           command: |
-#             # Your code here
-#             exit 1
-#       # Here's where you will add some code to rollback on failure
-#       - destroy-environment:
-#           id: $CIRCLE_WORKFLOW_ID     
+  run-migrations:
+    docker:
+      # Docker image here that supports NodeJS
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Run migrations
+          command: |
+            # Your code here
+            cd backend
+            npm install
+            npm run migrations > /tmp/migrations.results
+            #exit 1
+      - run:
+          name: Send migration results to memstash
+          command: |
+            # Your code here
+            curl -H "Content-Type: text/plain" \
+              -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" \
+              --request PUT \
+              --data "$(cat /tmp/migrations.results)" \
+              https://api.memstash.io/values/migrationresults
+            #exit 1
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment
 
 #   deploy-frontend:
 #     docker:

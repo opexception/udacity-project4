@@ -14,7 +14,12 @@
       # Your code here
 
     - name: "install python for Ansible."
-      # Your code here
+      become: yes
+      apt:
+        name: ["python3.7"]
+        state: latest
+        update_cache: yes
 
   roles:
     # Your code here
+    - configure-server

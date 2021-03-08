@@ -35,6 +35,17 @@
     production: yes
     state: present
 
+- name: "Setup Env Vars"
+  environment:
+    ENVIRONMENT: "production"
+    TYPEORM_CONNECTION: "postgres"
+    TYPEORM_ENTITIES: "./src/modules/domain/**/*.entity.ts"
+    TYPEORM_HOST: "udacitydb.c9cotxbmduci.us-west-2.rds.amazonaws.com"
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: "postgres"
+    TYPEORM_PASSWORD: "AnotherSecretWord!"
+    TYPEORM_DATABASE: "udacityproject4"
+
 # - name: Creates directory
 #   file:
 #     path: ~/web

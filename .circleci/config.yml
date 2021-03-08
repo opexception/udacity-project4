@@ -161,7 +161,20 @@ jobs:
               --tags project=project4-backend \
               --stack-name prod-backend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
-              #exit 1
+              #exit 1 
+      - run:
+          name: Gather backend IP Address
+          command: |
+              IPADDR=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID} \
+              --output text)
+              curl -H "Content-Type: text/plain" \
+              -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" \
+              --request PUT \
+              --data "${IPADDR}}" \
+              https://api.memstash.io/values/deployment
+
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -175,7 +188,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            echo "[all]" > ~/project/.circleci/ansible/inventory.txt
+            echo "[web]" > ~/project/.circleci/ansible/inventory.txt
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters Name=tag:project,Values=project4-backend \

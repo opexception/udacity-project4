@@ -161,20 +161,7 @@ jobs:
               --tags project=project4-backend \
               --stack-name prod-backend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID}  
-              #exit 1 
-      - run:
-          name: Gather backend IP Address
-          command: |
-              IPADDR=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID} \
-              --output text)
-              curl -H "Content-Type: text/plain" \
-              -H "token: 650fb8c2-e77f-4649-b51e-269f27ccbefb" \
-              --request PUT \
-              --data "${IPADDR}}" \
-              https://api.memstash.io/values/deployment
-
+              #exit 1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -188,7 +175,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            echo "[web]" > ~/project/.circleci/ansible/inventory.txt
+            echo "[all]" > ~/project/.circleci/ansible/inventory.txt
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters Name=tag:project,Values=project4-backend \
@@ -201,35 +188,36 @@ jobs:
       # Here's where you will add some code to rollback on failure    
       #- destroy-environment
 
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     # Checkout code from git
-  #     - checkout
-  #     # Add ssh keys with fingerprint
-  #     - add_ssh_keys:
-  #         fingerprints:
-  #           - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
-  #     # attach workspace
-  #     - attach_workstpace:
-  #         at: ~/
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           apk add --update ansible
-  #           #exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           export ANSIBLE_HOST_KEY_CHECKING=False
-  #           ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
-  #           #exit 1
-  #     # Here's where you will add some code to rollback on failure  
-  #     - destroy-environment  
+#   configure-infrastructure:
+#     docker:
+#       # Docker image here that supports Ansible
+#       - image: python:3.7-alpine3.11
+#     steps:
+#       # Checkout code from git
+#       - checkout
+#       # Add ssh keys with fingerprint
+#       - add_ssh_keys:
+#           fingerprints:
+#             - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
+#       # attach workspace
+#       - attach_workstpace:
+#           at: ~/
+#       - run:
+#           name: Install dependencies
+#           command: |
+#             # Your code here
+#             apk add --update ansible
+#             #exit 1
+#       - run:
+#           name: Configure server
+#           command: |
+#             # Your code here
+#             export ANSIBLE_HOST_KEY_CHECKING=False
+#             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+#             #exit 1
+#       # Here's where you will add some code to rollback on failure  
+#       - destroy-environment:
+#           id: $CIRCLE_WORKFLOW_ID    
 
 #   run-migrations:
 #     docker:

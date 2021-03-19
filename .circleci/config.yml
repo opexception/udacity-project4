@@ -77,6 +77,7 @@ jobs:
           name: Back-end build
           command: |
             cd backend
+            ls -al
             npm install
             npm run build
       - save_cache:

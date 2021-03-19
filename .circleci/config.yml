@@ -72,7 +72,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [v8-backend-build]
+          keys: [<< pipeline.id >>-backend-build]
       - run:
           name: Back-end build
           command: |
@@ -81,7 +81,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: v8-backend-build
+          key: << pipeline.id >>-backend-build
 
   test-frontend:
     docker:
@@ -109,7 +109,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v8-backend-build]
+          keys: [<< pipeline.id >>-backend-build]
       # Your job code here
       - run:
           name: Test back-end
@@ -144,7 +144,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [v8-backend-build]
+          keys: [<< pipeline.id >>-backend-build]
       # Your job code here
       - run:
           name: Audit back-end
@@ -342,7 +342,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - restore_cache:
-          keys: [v8-backend-build]
+          keys: [<< pipeline.id >>-backend-build]
       - run:
           name: Install dependencies
           command: |

@@ -84,6 +84,10 @@ jobs:
           paths:
             - ~/project/backend
           key: << pipeline.id >>-backend-build
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ~/project/backend
 
   test-frontend:
     docker:
@@ -340,11 +344,11 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
-      # attach workspace
+      attach workspace
       - attach_workspace:
           at: ~/
-      - restore_cache:
-          keys: [<< pipeline.id >>-backend-build]
+      # - restore_cache:
+      #     keys: [<< pipeline.id >>-backend-build]
       - run:
           name: Install dependencies
           command: |

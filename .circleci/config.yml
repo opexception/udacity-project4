@@ -356,7 +356,11 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-            cd ~/project/backend
+            pwd
+            ls -al
+            cd project
+            ls -al
+            cd backend
             ls -al
             exit 1
       # Here's where you will add some code to rollback on failure  

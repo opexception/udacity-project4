@@ -82,8 +82,7 @@ jobs:
             ls -al
       - save_cache:
           paths:
-            - backend/node_modules
-            - backend/dist
+            - ~/project/backend
           key: << pipeline.id >>-backend-build
 
   test-frontend:

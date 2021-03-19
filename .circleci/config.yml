@@ -354,7 +354,8 @@ jobs:
           name: Deploy backend
           command: |
             # your code here
-            ls -al backend/dist
+            cd ~/project/backend
+            ls -al
             exit 1
       # Here's where you will add some code to rollback on failure  
       - destroy-environment

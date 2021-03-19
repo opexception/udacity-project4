@@ -327,24 +327,37 @@ jobs:
       - destroy-environment 
       - empty-bucket
                     
-#   deploy-backend:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
-#       - destroy-environment:
-#           id: $CIRCLE_WORKFLOW_ID
+  deploy-backend:
+    docker:
+      # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints:
+            - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            apk add --update ansible
+            pip3 install --upgrade pip \
+              && pip3 install awscli
+      - run:
+          name: Deploy backend
+          command: |
+            # your code here
+            ls -al ./dist
+            exit 1
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment
+      - empty-bucket
+
 
 #   smoke-test:
 #     docker:
@@ -432,8 +445,8 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:

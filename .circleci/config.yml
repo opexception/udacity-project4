@@ -362,8 +362,6 @@ jobs:
             # your code here
             pwd
             ls -al
-            cd project
-            ls -al
             cd backend
             ls -al
             exit 1

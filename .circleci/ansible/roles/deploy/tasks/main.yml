@@ -1,0 +1,33 @@
+---
+# ---- Notes from lesson ----
+# - name: Create directory
+#   file:
+#     path: ~/backend
+#     state: directory
+# - name: Copy dist
+#   template:
+#     src: ~/project/backend/dist.tgz
+#     dest: ~/backend/
+# - name: Executing node
+#   shell: |
+#     pm2 start ~/backend/index.js -f
+
+- name: Compress dist
+  community.general.archive:
+    path: ~/project/backend/dist
+    dest: ~/project/backend/dist.tgz
+
+-name: Unpack dist.tgz
+ ansible.builtin.unarchive:
+   src: ~/project/backend/dist.tgz
+   dest: ~/
+   remote_src: no
+
+-name: Rename ~/dist -> ~/backend
+  command: mv ~/dist ~/backend
+
+# Start PM2 taken from https://knowledge.udacity.com/questions/394294
+- name: Start PM2
+  shell: |
+    cd ~/backend
+    pm2 start npm --name backend -- start

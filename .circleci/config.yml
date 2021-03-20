@@ -79,7 +79,7 @@ jobs:
             cd backend
             npm install
             npm run build
-            tar czf ~/project/backend/dist.tgz ~/project/backend/dist
+            tar czf dist.tgz dist
             ls -al
       - save_cache:
           paths:
@@ -357,7 +357,7 @@ jobs:
             apk add --update ansible
             pip3 install --upgrade pip \
               && pip3 install awscli
-            ansible-galaxy collection install community.general
+            #ansible-galaxy collection install community.general
       - run:
           name: Deploy backend
           command: |

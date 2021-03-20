@@ -25,6 +25,11 @@
    dest: ~/
    remote_src: no
 
+- name: Find dist
+  command: |
+    pwd
+    ls -al
+
 - name: Rename ~/dist -> ~/backend
   command: mv ~/dist ~/backend
 

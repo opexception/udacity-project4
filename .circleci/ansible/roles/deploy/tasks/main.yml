@@ -12,10 +12,12 @@
 #   shell: |
 #     pm2 start ~/backend/index.js -f
 
-- name: Compress dist
-  community.general.archive:
-    path: ~/project/backend/dist
-    dest: ~/project/backend/dist.tgz
+# This doesn;t work, because the src is expected to be on the remote machine.
+# - name: Compress dist
+#   community.general.archive:
+#     path: ~/project/backend/dist
+#     dest: ~/project/backend/dist.tgz
+
 
 - name: Unpack dist.tgz
   ansible.builtin.unarchive:

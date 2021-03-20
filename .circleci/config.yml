@@ -79,6 +79,7 @@ jobs:
             cd backend
             npm install
             npm run build
+            tar czf ~/project/backend/dist.tgz ~/project/backend/dist
             ls -al
       - save_cache:
           paths:

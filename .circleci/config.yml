@@ -79,7 +79,7 @@ jobs:
             cd backend
             npm install
             npm run build
-            tar czf dist.tgz dist
+            #tar czf dist.tgz dist
             ls -al
             cd ..
             tar czf backend.tgz backend
@@ -92,7 +92,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project
+            - project/backend.tgz
 
   test-frontend:
     docker:
@@ -369,7 +369,8 @@ jobs:
             # your code here
             pwd
             ls -al
-            ls -al backend
+            cd ~
+            ls -al
             cat ~/project/.circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml

@@ -212,10 +212,6 @@ jobs:
             --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID} \
             --output text >> ~/project/.circleci/ansible/inventory.txt
             #exit 1
-      - save_cache:
-          paths:
-            - ~/project/.circleci/ansible/inventory.txt
-          key: << pipeline.id >>-backend-build
       - persist_to_workspace:
           root: ~/
           paths:
@@ -354,10 +350,10 @@ jobs:
           fingerprints:
             - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
       # attach workspace
-      # - attach_workspace:
-      #     at: ~/
-      - restore_cache:
-          keys: [<< pipeline.id >>-backend-build]
+      - attach_workspace:
+          at: ~/
+      # - restore_cache:
+      #     keys: [<< pipeline.id >>-backend-build]
       - run:
           name: Install dependencies
           command: |
@@ -379,8 +375,8 @@ jobs:
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
             # exit 1
       # Here's where you will add some code to rollback on failure  
-      # - destroy-environment
-      # - empty-bucket
+      - destroy-environment
+      - empty-bucket
 
 
   smoke-test:

@@ -353,13 +353,13 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "f4:71:b5:ea:3e:fd:b1:fa:31:65:35:c8:e1:c9:3a:da"
-      # attach workspace
-      # - attach_workspace:
-      #     at: ~/
-      - restore_cache:
-          keys:
-            - << pipeline.id >>-backend-build
-            - << pipeline.id >>-deploy-infra
+      attach workspace
+      - attach_workspace:
+          at: ~/
+      # - restore_cache:
+      #     keys:
+      #       - << pipeline.id >>-backend-build
+      #       - << pipeline.id >>-deploy-infra
       - run:
           name: Install dependencies
           command: |
@@ -471,49 +471,18 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # # - cloudfront-update:
-      # #     requires: [smoke-test]
-      # # - cleanup:
-      # #     requires: [cloudfront-update]
-
-# Cheating to save time during troubleshooting
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
       - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [master]
@@ -521,14 +490,45 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
+      - deploy-frontend:
+          requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
       - smoke-test:
-          #requires: [deploy-backend, deploy-frontend]
-          requires: [deploy-backend]
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
+
+# Cheating to save time during troubleshooting
+      # - build-frontend
+      # - build-backend
+      # # - test-frontend:
+      # #     requires: [build-frontend]
+      # # - test-backend:
+      # #     requires: [build-backend]
+      # # - scan-backend:
+      # #     requires: [build-backend]
+      # # - scan-frontend:
+      # #     requires: [build-frontend]
+      # - deploy-infrastructure:
+      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # # - deploy-frontend:
+      # #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     #requires: [deploy-backend, deploy-frontend]
+      #     requires: [deploy-backend]
+      # # - cloudfront-update:
+      # #     requires: [smoke-test]
+      # # - cleanup:
+      # #     requires: [cloudfront-update]

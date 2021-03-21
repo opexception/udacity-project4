@@ -40,10 +40,15 @@
 # - name: "install dependencies."
 #   become: yes
 #   apt:
-#     name: ["nodejs", "npm"]
+##     name: ["nodejs", "npm"]
+#     name:
+#       - nodejs=13.14.0-deb-1nodesource1
+#       - npm
 #     state: present
 #     update_cache: yes
 #     install_recommends: yes
+
+
 
 - name: "install pm2"
   become: yes

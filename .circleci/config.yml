@@ -81,6 +81,8 @@ jobs:
             npm run build
             tar czf dist.tgz dist
             ls -al
+            cd ..
+            tar czf backend.tgz backend
       - save_cache:
           paths:
             - ~/project/backend
@@ -258,7 +260,7 @@ jobs:
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
             #exit 1
       # Here's where you will add some code to rollback on failure  
-      #- destroy-environment  
+      - destroy-environment  
 
   run-migrations:
     docker:
@@ -308,7 +310,8 @@ jobs:
           command: |
             # your code here
             # refer here for node install: https://stackoverflow.com/questions/27350634/how-to-yum-install-node-js-on-amazon-linux/35165401#35165401
-            curl --silent --location https://rpm.nodesource.com/setup_14.x | bash -
+            # curl --silent --location https://rpm.nodesource.com/setup_14.x | bash -
+            curl --silent --location https://rpm.nodesource.com/setup_13.x | bash -
             yum -y install nodejs
       - run:
           name: Bake in backend url
@@ -417,8 +420,8 @@ jobs:
               else exit 1
             fi
       # Here's where you will add some code to rollback on failure  
-      #- destroy-environment
-      #- empty-bucket
+      - destroy-environment
+      - empty-bucket
 
 #   cloudfront-update:
 #     docker:

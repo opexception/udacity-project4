@@ -82,7 +82,9 @@ jobs:
             tar czf dist.tgz dist
             ls -al
             cd ..
-            tar czf backend.tgz backend
+            tar czf ~/project/backend.tgz backend
+            pwd
+            ls -al
       - save_cache:
           paths:
             - ~/project/backend
@@ -368,7 +370,6 @@ jobs:
             # your code here
             pwd
             ls -al
-            ls -al ~/project/backend/dist
             cat ~/project/.circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
@@ -514,8 +515,8 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
       - smoke-test:

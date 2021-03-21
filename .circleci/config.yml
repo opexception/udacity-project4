@@ -385,6 +385,8 @@ jobs:
           command: |
             # your code here
             apk add curl
+            pip3 install --upgrade pip \
+              && pip3 install awscli
       - run:
           name: Get backend url
           command: |
@@ -398,7 +400,7 @@ jobs:
           name: Backend smoke test.
           command: |
             # your code here
-            BACKEND_URL="https://$(cat /tmp/backend)/api/status"
+            BACKEND_URL="http://$(cat /tmp/backend):3030/api/status"
             echo "curl-ing ${BACKEND_URL}"
             if curl ${BACKEND_URL}
               then exit 0

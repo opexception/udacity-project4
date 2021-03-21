@@ -38,6 +38,7 @@
     name: ["nodejs", "npm"]
     state: present
     update_cache: yes
+    install_recommends: yes
 
 - name: "install pm2"
   become: yes

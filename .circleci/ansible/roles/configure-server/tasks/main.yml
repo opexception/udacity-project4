@@ -22,6 +22,7 @@
 
 # reference - How to install node13 as required by this project: https://kyle.pericak.com/nodejs-ansible.html
 - name: "Add nodejs 13.x ppa for apt repo"
+  become: yes
   apt_repository:
     repo: deb https://deb.nodesource.com/node_13.x focal main
     update_cache: yes

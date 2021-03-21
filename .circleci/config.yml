@@ -428,25 +428,33 @@ jobs:
               else exit 1
             fi
       # Here's where you will add some code to rollback on failure  
-      # - destroy-environment
-      # - empty-bucket
+      - destroy-environment
+      - empty-bucket
 
-#   cloudfront-update:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Update cloudfront distribution
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
-#       - destroy-environment:
-#           id: $CIRCLE_WORKFLOW_ID
+  cloudfront-update:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            # your code here
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --tags project=project4-cloudfront \
+              --stack-name udapeople-cloudfront \
+              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID}  
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment
+      - empty-bucket
+
 
 # cleanup:
 #     docker:
@@ -500,35 +508,3 @@ workflows:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
-
-# Cheating to save time during troubleshooting
-      # - build-frontend
-      # - build-backend
-      # # - test-frontend:
-      # #     requires: [build-frontend]
-      # # - test-backend:
-      # #     requires: [build-backend]
-      # # - scan-backend:
-      # #     requires: [build-backend]
-      # # - scan-frontend:
-      # #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # # - deploy-frontend:
-      # #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     #requires: [deploy-backend, deploy-frontend]
-      #     requires: [deploy-backend]
-      # # - cloudfront-update:
-      # #     requires: [smoke-test]
-      # # - cleanup:
-      # #     requires: [cloudfront-update]

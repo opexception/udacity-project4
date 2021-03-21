@@ -1,34 +1,9 @@
 ---
-# ---- Notes from lesson ----
-# - name: Create directory
-#   file:
-#     path: ~/backend
-#     state: directory
-# - name: Copy dist
-#   template:
-#     src: ~/project/backend/dist.tgz
-#     dest: ~/backend/
-# - name: Executing node
-#   shell: |
-#     pm2 start ~/backend/index.js -f
-
-# This doesn;t work, because the src is expected to be on the remote machine.
-# - name: Compress dist
-#   community.general.archive:
-#     path: ~/project/backend/dist
-#     dest: ~/project/backend/dist.tgz
-
-
 - name: Unpack dist.tgz
   ansible.builtin.unarchive:
    src: ~/project/backend/dist.tgz
    dest: ~/
    remote_src: no
-
-- name: Find dist
-  shell: |
-    pwd
-    ls -al
 
 - name: Rename ~/dist -> ~/backend
   command: mv ~/dist ~/backend

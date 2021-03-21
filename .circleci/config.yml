@@ -82,7 +82,7 @@ jobs:
             tar czf dist.tgz dist
             ls -al
             cd ..
-            tar czf ~/project/backend.tgz backend
+            tar czf backend.tgz backend
             pwd
             ls -al
       - save_cache:
@@ -92,8 +92,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/backend
-            - project/backend.tgz
+            - project
 
   test-frontend:
     docker:

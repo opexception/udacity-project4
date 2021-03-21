@@ -215,6 +215,7 @@ jobs:
       - save_cache:
           paths:
             - ~/project/.circleci/ansible/inventory.txt
+          key: << pipeline.id >>-backend-build
       - persist_to_workspace:
           root: ~/
           paths:

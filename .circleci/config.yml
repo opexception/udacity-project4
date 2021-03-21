@@ -369,13 +369,14 @@ jobs:
             # your code here
             pwd
             ls -al
+            ls -al backend
             cat ~/project/.circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
             # exit 1
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment
-      - empty-bucket
+      # - destroy-environment
+      # - empty-bucket
 
 
   smoke-test:

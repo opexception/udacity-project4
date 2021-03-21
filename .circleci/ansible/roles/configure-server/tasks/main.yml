@@ -1,7 +1,14 @@
 ---
-- name: "Add nodejs 13.x ppa for apt repo"
-  # become: yes
-  shell: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+# - name: "Add nodejs 13.x ppa for apt repo"
+#   become: yes
+#   shell: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+
+- name: "Remove any node npm that might already be installed."
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: absent
+    purge: yes
 
 - name: "update apt packages."
   become: yes
@@ -13,23 +20,17 @@
   apt:
     upgrade: yes
 
-# - name: "install build tools"
-#   become: yes
-#   apt:
-#     name: ["build-essential"]
-#     state: latest
-
 - name: remove dependencies that are no longer required
   become: yes
   apt:
     autoremove: yes
 
-# reference - How to install node13 as required by this project: https://kyle.pericak.com/nodejs-ansible.html
-# - name: "Add nodejs 13.x ppa for apt repo"
-#   become: yes
-#   apt_repository:
-#     repo: deb https://deb.nodesource.com/node_13.x focal main
-#     update_cache: yes
+reference - How to install node13 as required by this project: https://kyle.pericak.com/nodejs-ansible.html
+- name: "Add nodejs 13.x ppa for apt repo"
+  become: yes
+  apt_repository:
+    repo: deb https://deb.nodesource.com/node_13.x focal main
+    update_cache: yes
 
 
 - name: "install dependencies."

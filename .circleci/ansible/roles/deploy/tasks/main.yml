@@ -1,5 +1,5 @@
 ---
-- name: Unpack dist.tgz
+- name: Unpack backend
   ansible.builtin.unarchive:
    #src: ~/project/backend/dist.tgz
    src: ~/project/backend.tgz

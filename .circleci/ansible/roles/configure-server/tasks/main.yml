@@ -20,11 +20,17 @@
   apt:
     autoremove: yes
 
+# reference - How to install node13 as required by this project: https://kyle.pericak.com/nodejs-ansible.html
+- name: "Add nodejs 13.x ppa for apt repo"
+  apt_repository:
+    repo: deb https://deb.nodesource.com/node_13.x focal main
+    update_cache: yes
+
 - name: "install dependencies."
   become: yes
   apt:
     name: ["nodejs", "npm"]
-    state: latest
+    state: present
     update_cache: yes
 
 - name: "install pm2"

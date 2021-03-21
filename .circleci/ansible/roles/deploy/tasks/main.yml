@@ -13,5 +13,5 @@
 - name: Start PM2
   shell: |
     cd ~/backend
-    #pm2 start npm --name backend -- start
-    pm2 start npm -i 1 --name backend -- start
+    pm2 start npm --name backend -- start
+    #pm2 start npm -i 1 --name backend -- start

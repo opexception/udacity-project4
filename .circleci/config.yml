@@ -91,6 +91,7 @@ jobs:
           root: ~/
           paths:
             - project/backend
+            - project/backend.tgz
 
   test-frontend:
     docker:

@@ -485,14 +485,14 @@ jobs:
               do
                 if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
                   then continue
-                  else FEOldWorkflowID=(${stack#*-} FE${OldWorkflowID[@]}
+                  else FEOldWorkflowID=(${stack#*-} FE${OldWorkflowID[@]})
                 fi
               done
             for stack in ${BackendStackName[@]}
               do
                 if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
                   then continue
-                  else BEOldWorkflowID=(${stack#*-} BE${OldWorkflowID[@]}
+                  else BEOldWorkflowID=(${stack#*-} BE${OldWorkflowID[@]})
                 fi
               done
             OldWorkflowID=($(for stack in ${FEOldWorkflowID} ${BEOldWorkflowID}

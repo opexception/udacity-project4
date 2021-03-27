@@ -470,27 +470,51 @@ jobs:
             # export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
             # export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
             # echo Old WorkflowID: "${OldworkflowID}"
-            export FrontendStackName=$(aws cloudformation describe-stacks \
+            export FrontendStackName=($(aws cloudformation describe-stacks \
               --query 'Stacks[?Tags[?Key == `project` && Value == `project4-frontend`]].{StackName: StackName}' \
-              --stack-status-filter CREATE_COMPLETE \
               --no-paginate \
-              --output text)
-            export BackendStackName=$(aws cloudformation describe-stacks \
+              --output text))
+            export BackendStackName=($(aws cloudformation describe-stacks \
               --query 'Stacks[?Tags[?Key == `project` && Value == `project4-backend`]].{StackName: StackName}' \
-              --stack-status-filter CREATE_COMPLETE \
               --no-paginate \
-              --output text)
+              --output text))
             echo -e "Frontend Stack Name: ${FrontendStackName}\nBackend Stack Name: ${BackendStackName}"
-            export OldWorkflowID="${FrontendStackName#*-}"
-            echo ${OldWorkflowID}
+            FEOldWorkflowID=()
+            BEOldWorkflowID=()
+            for stack in ${FrontendStackName[@]}
+              do
+                if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
+                  then continue
+                  else FEOldWorkflowID=(${stack#*-} FE${OldWorkflowID[@]}
+                fi
+              done
+            for stack in ${BackendStackName[@]}
+              do
+                if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
+                  then continue
+                  else BEOldWorkflowID=(${stack#*-} BE${OldWorkflowID[@]}
+                fi
+              done
+            OldWorkflowID=($(for stack in ${FEOldWorkflowID} ${BEOldWorkflowID}
+              do 
+                echo ${stack}
+              done | sort | uniq))
+            export OldWorkflowID
+            echo -e "Found Stacks with old WorkflowIDs:\n${OldWorkflowID[@]}"
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [ ${#OldWorkflowID} -gt 0 ]
               then
-                aws s3 rm --recursive "s3://udapeople-${OldWorkflowID}/" 
-                aws cloudformation delete-stack --stack-name prodbackend-${OldWorkflowID}
-                aws cloudformation delete-stack --stack-name prodfrontend-${OldWorkflowID}
+                for ID in ${OldWorkflowID[@]}
+                  do
+                    echo "Removing stacks"
+                    aws s3 rm --recursive "s3://udapeople-${ID}/" 
+                    aws cloudformation delete-stack --stack-name prodbackend-${ID}
+                    aws cloudformation delete-stack --stack-name prodfrontend-${ID}
+                  done
+              else
+                echo "Did not find any stacks to remove."
             fi
             
 

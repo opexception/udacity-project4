@@ -466,10 +466,6 @@ jobs:
           name: Find and remove old stacks
           command: |
             # your code here
-            # I don't see how this is a good idea to use exported values, since you need a constant "Name" to query against, but the name must be unique per stack!
-            # export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
-            # export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-            # echo Old WorkflowID: "${OldworkflowID}"
             export FrontendStackName=($(aws cloudformation describe-stacks \
               --query 'Stacks[?Tags[?Key == `project` && Value == `project4-frontend`]].{StackName: StackName}' \
               --no-paginate \
@@ -518,7 +514,6 @@ jobs:
               else
                 echo "Did not find any stacks to remove."
             fi
-            
 
 workflows:
   default:

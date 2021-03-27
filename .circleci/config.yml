@@ -478,7 +478,7 @@ jobs:
               --query 'Stacks[?Tags[?Key == `project` && Value == `project4-backend`]].{StackName: StackName}' \
               --no-paginate \
               --output text))
-            echo -e "Frontend Stack Name: ${FrontendStackName}\nBackend Stack Name: ${BackendStackName}"
+            echo -e "Frontend Stack Name: ${FrontendStackName[@]}\nBackend Stack Name: ${BackendStackName[@]}"
             FEOldWorkflowID=()
             BEOldWorkflowID=()
             for stack in ${FrontendStackName[@]}
@@ -501,9 +501,6 @@ jobs:
               done | sort | uniq))
             export OldWorkflowID
             echo -e "Found Stacks with old WorkflowIDs:\n${OldWorkflowID[@]}"
-      - run:
-          name: Remove old stacks and files
-          command: |
             if [ ${#OldWorkflowID} -gt 0 ]
               then
                 for ID in ${OldWorkflowID[@]}

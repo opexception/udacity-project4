@@ -463,7 +463,7 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
-          name: Get old stack workflow id
+          name: Find and remove old stacks
           command: |
             # your code here
             # I don't see how this is a good idea to use exported values, since you need a constant "Name" to query against, but the name must be unique per stack!
@@ -496,18 +496,23 @@ jobs:
                 fi
               done
             OldWorkflowID=($(for stack in ${FEOldWorkflowID} ${BEOldWorkflowID}
-              do 
-                echo ${stack}
-              done | sort | uniq))
-            export OldWorkflowID
-            echo -e "Found Stacks with old WorkflowIDs:\n${OldWorkflowID[@]}"
+                              do 
+                                echo ${stack}
+                              done | sort | uniq))
+            echo "Found Stacks with old WorkflowIDs:"
+            for i in ${OldWorkflowID[@]}
+              do echo $i
+              done
             if [ ${#OldWorkflowID} -gt 0 ]
               then
+                echo "Found ${#OldWorkflowID} stack(s) which needs to be removed"
                 for ID in ${OldWorkflowID[@]}
                   do
-                    echo "Removing stacks"
+                    echo "Removing S3 bucket with WorkflowID: ${ID}"
                     aws s3 rm --recursive "s3://udapeople-${ID}/" 
+                    echo "Removing Backend stack with WorkflowID: ${ID}"
                     aws cloudformation delete-stack --stack-name prodbackend-${ID}
+                    echo "Removing Frontend stack with WorkflowID: ${ID}"
                     aws cloudformation delete-stack --stack-name prodfrontend-${ID}
                   done
               else

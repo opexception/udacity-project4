@@ -176,7 +176,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=project4-backend \
+              --tags project=project4-backend workflowid=${CIRCLE_WORKFLOW_ID} \
               --stack-name prodbackend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID}  
               #exit 1 
@@ -198,7 +198,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=project4-frontend \
+              --tags project=project4-frontend workflowid=${CIRCLE_WORKFLOW_ID} \
               --stack-name prodfrontend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID}  
               #exit 1
@@ -466,35 +466,18 @@ jobs:
           name: Find and remove old stacks
           command: |
             # your code here
-            export FrontendStackName=($(aws cloudformation describe-stacks \
-              --query 'Stacks[?Tags[?Key == `project` && Value == `project4-frontend`]].{StackName: StackName}' \
-              --no-paginate \
-              --output text))
-            export BackendStackName=($(aws cloudformation describe-stacks \
-              --query 'Stacks[?Tags[?Key == `project` && Value == `project4-backend`]].{StackName: StackName}' \
-              --no-paginate \
-              --output text))
-            echo -e "Frontend Stack Name: ${FrontendStackName[@]}\nBackend Stack Name: ${BackendStackName[@]}"
-            FEOldWorkflowID=()
-            BEOldWorkflowID=()
-            for stack in ${FrontendStackName[@]}
+            FoundWorkflowIDs=($(aws cloudformation describe-stacks \
+                          --query 'Stacks[?Tags[?Key == `project` && Value == `project4-frontend` || Value == `project4-backend`]].{Parameters: Parameters[?ParameterKey == `WorkflowID`]}' \
+                          --no-paginate \
+                          --output text | awk '{print $3}' |sort |uniq))
+            OldWorkflowID=()
+            for WorkflowID in ${FoundWorkflowIDs[@]}
               do
-                if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
+                if [ "${WorkflowID}" = "${CIRCLE_WORKFLOW_ID}" ]
                   then continue
-                  else FEOldWorkflowID=(${stack#*-} ${FEOldWorkflowID[@]})
+                  else OldWorkflowID=(${WorkflowID} ${OldWorkflowID[@]})
                 fi
               done
-            for stack in ${BackendStackName[@]}
-              do
-                if [ "${stack#*-}" = "${CIRCLE_WORKFLOW_ID}" ]
-                  then continue
-                  else BEOldWorkflowID=(${stack#*-} ${BEOldWorkflowID[@]})
-                fi
-              done
-            OldWorkflowID=($(for stack in ${FEOldWorkflowID[@]} ${BEOldWorkflowID[@]}
-                              do 
-                                echo ${stack}
-                              done | sort | uniq))
             echo "Found Stacks with old WorkflowIDs:"
             for i in ${OldWorkflowID[@]}
               do echo ${i}

@@ -34,5 +34,6 @@ Outputs:
     Description: URL for website hosted on S3
   WorkflowID:
     Description: The workflow ID to identify this stack
-    Name: WorkflowID
     Value: !Sub "${WorkflowID}"
+    Export:
+      Name: WorkflowID

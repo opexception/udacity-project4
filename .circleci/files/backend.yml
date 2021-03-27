@@ -40,5 +40,6 @@ Resources:
 Outputs:
   WorkflowID:
     Description: The workflow ID to identify this stack
-    Name: WorkflowID
     Value: !Sub "${WorkflowID}"
+    Export:
+      Name: WorkflowID

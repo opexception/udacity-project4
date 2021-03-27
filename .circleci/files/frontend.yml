@@ -35,5 +35,5 @@ Outputs:
   WorkflowID:
     Description: The workflow ID to identify this stack
     Value: !Sub "${WorkflowID}"
-    Export:
-      Name: Frontend-WorkflowID
+    # Export:
+    #   Name: Frontend-WorkflowID

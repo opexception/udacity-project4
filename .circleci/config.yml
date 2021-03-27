@@ -488,11 +488,11 @@ jobs:
                 for ID in ${OldWorkflowID[@]}
                   do
                     echo "Removing S3 bucket with WorkflowID: ${ID}"
-                    aws s3 rm --recursive "s3://udapeople-${ID}/" 
+                    aws s3 rm --recursive "s3://udapeople-${ID}/" &
                     echo "Removing Backend stack with WorkflowID: ${ID}"
-                    aws cloudformation delete-stack --stack-name prodbackend-${ID}
+                    aws cloudformation delete-stack --stack-name prodbackend-${ID} &
                     echo "Removing Frontend stack with WorkflowID: ${ID}"
-                    aws cloudformation delete-stack --stack-name prodfrontend-${ID}
+                    aws cloudformation delete-stack --stack-name prodfrontend-${ID} &
                   done
               else
                 echo "Did not find any stacks to remove."

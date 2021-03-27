@@ -11,8 +11,8 @@ commands:
           when: on_fail
           command: |
             # Your code here 
-            aws cloudformation delete-stack --stack-name prod-backend_${CIRCLE_WORKFLOW_ID}
-            aws cloudformation delete-stack --stack-name prod-frontend_${CIRCLE_WORKFLOW_ID}
+            aws cloudformation delete-stack --stack-name prodbackend-${CIRCLE_WORKFLOW_ID}
+            aws cloudformation delete-stack --stack-name prodfrontend-${CIRCLE_WORKFLOW_ID}
             #exit 1
 
   revert-migrations:
@@ -177,7 +177,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=project4-backend \
-              --stack-name prod-backend_${CIRCLE_WORKFLOW_ID} \
+              --stack-name prodbackend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID}  
               #exit 1 
       - run:
@@ -199,7 +199,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=project4-frontend \
-              --stack-name prod-frontend_${CIRCLE_WORKFLOW_ID} \
+              --stack-name prodfrontend-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID}  
               #exit 1
       - run:
@@ -481,7 +481,7 @@ jobs:
               --no-paginate \
               --output text)
             echo -e "Frontend Stack Name: ${FrontendStackName}\nBackend Stack Name: ${BackendStackName}"
-            export OldWorkflowID="${FrontendStackName#*_}"
+            export OldWorkflowID="${FrontendStackName#*-}"
             echo ${OldWorkflowID}
       - run:
           name: Remove old stacks and files
@@ -489,8 +489,8 @@ jobs:
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
                 aws s3 rm --recursive "s3://udapeople-${OldWorkflowID}/" 
-                aws cloudformation delete-stack --stack-name prod-backend_${OldWorkflowID}
-                aws cloudformation delete-stack --stack-name prod-frontend_${OldWorkflowID}
+                aws cloudformation delete-stack --stack-name prodbackend-${OldWorkflowID}
+                aws cloudformation delete-stack --stack-name prodfrontend-${OldWorkflowID}
             fi
             
 

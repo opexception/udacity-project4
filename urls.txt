@@ -1,5 +1,5 @@
 URL01 https://github.com/opexception/udacity-project4/tree/master - Public Url to GitHub repository (not private)
-URL02 http://udapeople-bd692eb2-931e-4bcc-aef5-6d1d731a5d3d.s3-website-us-west-2.amazonaws.com/ - Public URL for your S3 Bucket (aka, your green candidate front-end)
+URL02 http://udapeople-363bbd01-a223-4505-accc-a71cdd995d68.s3-website-us-west-2.amazonaws.com/ - Public URL for your S3 Bucket (aka, your green candidate front-end)
 URL03 http://d1nlr6wj07irky.cloudfront.net/#/employees - Public URL for your CloudFront distribution (aka, your blue production front-end)
-URL04 http://34.217.113.6:3030 - Public URLs to deployed application back-end in EC2
+URL04 http://34.222.36.122:3030 - Public URLs to deployed application back-end in EC2
 URL05 http://ec2-52-13-121-83.us-west-2.compute.amazonaws.com:9090/targets - Public URL to your Prometheus Server
